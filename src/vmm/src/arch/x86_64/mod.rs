@@ -169,7 +169,7 @@ pub fn get_kernel_start() -> u64 {
 /// Returns the memory address where the initrd could be loaded.
 pub fn initrd_load_addr(guest_mem: &GuestMemoryMmap, initrd_size: usize) -> Option<u64> {
     let first_region = guest_mem.find_region(GuestAddress::new(0))?;
-    let lowmem_size = u64_to_usize(first_region.len());
+    let lowmem_size = u64_to_usize(first_region.len()).min(1 << 12 << 9 << 9 /* 1 Gigabyte */);
 
     if lowmem_size < initrd_size {
         return None;
